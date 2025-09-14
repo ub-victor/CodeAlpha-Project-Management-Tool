@@ -1,12 +1,29 @@
-# React + Vite
+# Project Management Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Trello-like collaborative project management tool built with the MERN stack.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User authentication (register/login)
+- Create and manage projects
+- Drag-and-drop task management
+- Assign tasks to team members
+- Commenting system for tasks
+- Real-time updates with WebSockets
+- Responsive design
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Frontend: React, Vite, CSS3
+- Backend: Node.js, Express.js
+- Database: MongoDB with Mongoose
+- Real-time: Socket.io
+- Authentication: JWT
+
+## Installation
+
+1. Clone the repository
+2. Install backend dependencies:
+   ```bash
+   cd backend
+   npm install
