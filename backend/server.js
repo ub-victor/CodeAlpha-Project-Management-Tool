@@ -51,6 +51,24 @@ io.on('connection', (socket) => {
     socket.to(data.projectId).emit('comment-added', data);
   });
   
+  // NEW EVENT HANDLERS ADDED HERE
+  socket.on('task-created', (data) => {
+    socket.to(data.projectId).emit('task-created', data);
+  });
+
+  socket.on('task-deleted', (data) => {
+    socket.to(data.projectId).emit('task-deleted', data);
+  });
+
+  socket.on('comment-updated', (data) => {
+    socket.to(data.projectId).emit('comment-updated', data);
+  });
+
+  socket.on('comment-deleted', (data) => {
+    socket.to(data.projectId).emit('comment-deleted', data);
+  });
+  // END OF NEW EVENT HANDLERS
+  
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
