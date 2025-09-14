@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -14,28 +15,31 @@ function App() {
     <Router>
       <div className="App">
         <Navbar />
-        <Routes>
-          <Route 
-            path="/login" 
-            element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} 
-          />
-          <Route 
-            path="/register" 
-            element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} 
-          />
-          <Route 
-            path="/dashboard" 
-            element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/project/:id" 
-            element={isAuthenticated ? <Project /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/" 
-            element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} 
-          />
-        </Routes>
+        <main style={{ flex: '1 0 auto' }}>
+          <Routes>
+            <Route 
+              path="/login" 
+              element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} 
+            />
+            <Route 
+              path="/register" 
+              element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} 
+            />
+            <Route 
+              path="/dashboard" 
+              element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/project/:id" 
+              element={isAuthenticated ? <Project /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/" 
+              element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} 
+            />
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </Router>
   );
