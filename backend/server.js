@@ -13,13 +13,6 @@ const commentRoutes = require('./routes/comments');
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors(
-  {
-    origin: ["https://project-managemet-tool-f.vercel.app", "http://localhost:5173", "http://localhost:5000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-  }
-));
 
 // Updated CORS configuration
 const io = socketIo(server, {
