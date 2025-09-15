@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import axios from 'axios'
+import api from '../../services/api' // Import the api service
 import './NewProjectModal.css'
 
 const NewProjectModal = ({ onClose, onProjectCreated, socket }) => {
@@ -23,17 +23,13 @@ const NewProjectModal = ({ onClose, onProjectCreated, socket }) => {
     setLoading(true)
     
     try {
-      const token = user.token
-      const response = await axios.post('http://localhost:5000/api/projects', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await api.post('/projects', formData)
       
       onProjectCreated(response.data)
       onClose()
     } catch (error) {
       console.error('Error creating project:', error)
+      alert('Failed to create project. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -57,6 +53,7 @@ const NewProjectModal = ({ onClose, onProjectCreated, socket }) => {
               value={formData.name}
               onChange={handleChange}
               required
+              placeholder="Enter project name"
             />
           </div>
           
@@ -68,6 +65,7 @@ const NewProjectModal = ({ onClose, onProjectCreated, socket }) => {
               value={formData.description}
               onChange={handleChange}
               rows="3"
+              placeholder="Enter project description (optional)"
             />
           </div>
           

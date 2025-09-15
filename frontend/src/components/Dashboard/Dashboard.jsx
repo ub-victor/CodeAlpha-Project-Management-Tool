@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import axios from 'axios'
+import api from '../../services/api' // Import the api service
 import ProjectCard from './ProjectCard'
 import NewProjectModal from './NewProjectModal'
 import './Dashboard.css'
@@ -33,15 +33,12 @@ const Dashboard = ({ socket }) => {
 
   const fetchProjects = async () => {
     try {
-      const token = user.token
-      const response = await axios.get('http://localhost:5000/api/projects', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const response = await api.get('/projects')
       setProjects(response.data)
     } catch (error) {
       console.error('Error fetching projects:', error)
+      // Show user-friendly error message
+      alert('Failed to load projects. Please try again.')
     } finally {
       setLoading(false)
     }

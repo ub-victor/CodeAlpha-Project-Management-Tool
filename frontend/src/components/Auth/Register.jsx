@@ -11,16 +11,22 @@ const Register = () => {
     confirmPassword: ''
   })
   const [passwordsMatch, setPasswordsMatch] = useState(true)
-  const { register, user, error, clearError } = useAuth()
+  const { register, user, error, clearError, loading } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('Register component mounted');
+    console.log('Current user:', user);
+    console.log('Current error:', error);
+    
     if (user) {
+      console.log('User exists, navigating to home');
       navigate('/')
     }
   }, [user, navigate])
 
   useEffect(() => {
+    console.log('Clearing previous errors');
     clearError()
   }, [])
 
@@ -37,8 +43,10 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log('Register form submitted:', formData);
     
     if (formData.password !== formData.confirmPassword) {
+      console.log('Passwords do not match');
       return
     }
     
@@ -49,7 +57,15 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Create Your Account</h2>
-        {error && <div className="error-message">{error}</div>}
+        
+        {error && (
+          <div className="error-message">
+            <strong>Error:</strong> {error}
+            <br />
+            <small>Please check your connection and try again</small>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
@@ -60,8 +76,11 @@ const Register = () => {
               value={formData.username}
               onChange={handleChange}
               required
+              disabled={loading}
+              placeholder="Enter your username"
             />
           </div>
+          
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -71,8 +90,11 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={loading}
+              placeholder="Enter your email"
             />
           </div>
+          
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -82,8 +104,11 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading}
+              placeholder="Enter your password"
             />
           </div>
+          
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input
@@ -93,19 +118,23 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
+              disabled={loading}
+              placeholder="Confirm your password"
             />
             {!passwordsMatch && formData.confirmPassword && (
               <div className="error-text">Passwords do not match</div>
             )}
           </div>
+          
           <button 
             type="submit" 
             className="auth-btn"
-            disabled={!passwordsMatch}
+            disabled={!passwordsMatch || loading}
           >
-            Register
+            {loading ? 'Creating Account...' : 'Register'}
           </button>
         </form>
+        
         <p className="auth-link">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
