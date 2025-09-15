@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 app.use(cors(
   {
-    origin: ["https://deploy-mern-1whq.vercel.app", "http://localhost:5173", "http://localhost:5000"],
+    origin: ["https://deploy-mern-1whq.vercel.app/", "http://localhost:5173", "http://localhost:5000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }
