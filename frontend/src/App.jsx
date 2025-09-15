@@ -14,7 +14,7 @@ function App() {
   const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    const newSocket = io('project-managemet-tool.vercel.app/')
+    const newSocket = io('http://localhost:5000')
     setSocket(newSocket)
 
     return () => newSocket.close()
