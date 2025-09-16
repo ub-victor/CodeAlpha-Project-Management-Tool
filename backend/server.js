@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
-const path = require('path'); // ← ADD THIS LINE
+const path = require('path');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -19,7 +19,7 @@ const io = socketIo(server, {
   cors: {
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
-      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('onrender.com')) {
         return callback(null, true);
       }
       callback(null, true);
@@ -33,7 +33,7 @@ const io = socketIo(server, {
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('onrender.com')) {
       return callback(null, true);
     }
     callback(null, true);
@@ -44,21 +44,20 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 
-// Routes
+// API Routes - MUST COME BEFORE STATIC FILES
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
 
-// ← ADD THIS SECTION TO SERVE FRONTEND ↓
 // Serve static files from frontend build in production
 if (process.env.NODE_ENV === 'production') {
   // Serve static files from the frontend dist folder
   app.use(express.static(path.join(__dirname, '../frontend/dist')));
   
-  // Handle SPA (Single Page Application) routing
-  app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  // Handle SPA routing - USE REGEX INSTEAD OF '*'
+  app.get(/(.*)/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
   });
 } else {
   // Development mode - show API info
@@ -77,7 +76,6 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 }
-// ← END OF ADDED SECTION ↑
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/projectmanagement')
