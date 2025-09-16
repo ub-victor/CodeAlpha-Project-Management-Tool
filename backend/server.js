@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path'); // ← ADD THIS LINE
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -13,20 +14,14 @@ const commentRoutes = require('./routes/comments');
 const app = express();
 const server = http.createServer(app);
 
-
 // Updated CORS configuration
 const io = socketIo(server, {
   cors: {
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      
-      // Allow all localhost ports and common development origins
       if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
         return callback(null, true);
       }
-      
-      // For production, you would check against a whitelist
       callback(null, true);
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -37,15 +32,10 @@ const io = socketIo(server, {
 // Updated CORS middleware
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
-    // Allow all localhost ports and common development origins
     if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
       return callback(null, true);
     }
-    
-    // For production, you would check against a whitelist
     callback(null, true);
   },
   credentials: true
@@ -59,6 +49,35 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
+
+// ← ADD THIS SECTION TO SERVE FRONTEND ↓
+// Serve static files from frontend build in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the frontend dist folder
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  
+  // Handle SPA (Single Page Application) routing
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  });
+} else {
+  // Development mode - show API info
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Project Management Tool API (Development Mode)',
+      status: 'Running ✅',
+      version: '1.0.0',
+      frontend: 'Run frontend separately on http://localhost:5173',
+      endpoints: {
+        auth: '/api/auth',
+        projects: '/api/projects', 
+        tasks: '/api/tasks',
+        comments: '/api/comments'
+      }
+    });
+  });
+}
+// ← END OF ADDED SECTION ↑
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/projectmanagement')
@@ -82,7 +101,6 @@ io.on('connection', (socket) => {
     socket.to(data.projectId).emit('comment-added', data);
   });
   
-  // NEW EVENT HANDLERS ADDED HERE
   socket.on('task-created', (data) => {
     socket.to(data.projectId).emit('task-created', data);
   });
@@ -98,7 +116,6 @@ io.on('connection', (socket) => {
   socket.on('comment-deleted', (data) => {
     socket.to(data.projectId).emit('comment-deleted', data);
   });
-  // END OF NEW EVENT HANDLERS
   
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
