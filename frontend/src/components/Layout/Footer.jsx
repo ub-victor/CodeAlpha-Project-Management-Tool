@@ -8,8 +8,8 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-top">
           <div className="footer-credits">
-            <a href="https://www.codealpha.com" target="_blank" rel="noopener noreferrer">
-              <h5>Challenge Task by CodeAlpha</h5>
+            <a href="https://www.linkedin.com/company/the-gym-software-development-trainee-program/" target="_blank" rel="noopener noreferrer">
+              <h5>Challenge Task by The Gym</h5>
             </a>
             <a href="https://www.linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer">
               <h5>Developed by Ushindi Bihame</h5>
